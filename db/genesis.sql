@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS messages (
+	id int NOT NULL AUTO_INCREMENT,
+	msg varchar(128) NOT NULL,
+	ts timestamp DEFAULT CURRENT_TIMESTAMP(),
+	PRIMARY KEY (id)
+);
