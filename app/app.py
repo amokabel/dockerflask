@@ -1,25 +1,32 @@
 from flask import Flask
 import mysql.connector
 import sys
+import logging
+
+app = Flask(__name__)
+app.logger.setLevel(logging.INFO)
+g_conn = None
 
 class Database:
     def __init__(self, password_file=None):
-        pf = open(password_file, 'r')
-        self.connection = mysql.connector.connect(
-            user='root', 
-            password=pf.read(),
-            host='db',
-            database='testdb',
-            auth_plugin='mysql_native_password'
-        )
-        pf.close()
-        self.cursor = self.connection.cursor()
+        app.logger.info("Connecting to db")
+        with open(password_file, 'r') as pf:
+            pwd = pf.read()
+            app.logger.info("Password lol: %s" %pwd)
+            self.connection = mysql.connector.connect(
+                user='root', 
+                # password=pwd,
+                password='19bananskal',
+                host='db',
+                database='testdb',
+                auth_plugin='mysql_native_password'
+            )
+            self.cursor = self.connection.cursor()
 
     def addEntry(self, msg):
+        app.logger.info("Adding entry: %s" %msg)
         self.cursor.execute("INSERT INTO messages (msg) VALUES('%s');" %msg)
 
-app = Flask(__name__)
-g_conn = None
 
 def db_handle():
     global g_conn
@@ -27,7 +34,7 @@ def db_handle():
         try: 
             g_conn = Database('/run/secrets/db-password')
         except mysql.connector.errors.ProgrammingError as e:
-            print(e.msg)
+            app.logger.error(e.msg)
             g_conn = None
 
     return g_conn
@@ -39,5 +46,5 @@ def index():
     if conn:
         db_handle().addEntry("hello")
 
-    return "Hello"
+    return "BDisco"
 
