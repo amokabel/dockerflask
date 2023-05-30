@@ -19,7 +19,8 @@ class Database:
                 password=pwd,
                 host='db',
                 database='testdb',
-                auth_plugin='mysql_native_password'
+                auth_plugin='mysql_native_password',
+                autocommit=True
             )
             self.cursor = self.connection.cursor()
 
