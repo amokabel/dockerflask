@@ -26,6 +26,14 @@ class Database:
         app.logger.info("Adding entry: %s" %msg)
         self.cursor.execute("INSERT INTO messages (msg) VALUES('%s');" %msg)
 
+    def fetchEntries(self):
+        app.logger.info("Fetching entries")
+        ret = []
+        self.cursor.execute("SELECT msg, ts FROM messages;")
+        for c in self.cursor:
+            ret.append(c[0])
+
+        return ret
 
 def db_handle():
     global g_conn
@@ -42,8 +50,17 @@ def db_handle():
 @app.route('/')
 def index():
     conn = db_handle()
+    entries = []
     if conn:
         db_handle().addEntry("hello")
+        messages = db_handle().fetchEntries()
+    else:
+        app.logger.error("Could not add entry")
 
-    return "BDisco"
+    msg = "Disco\n"
+    for m in messages:
+        msg += m
+        msg += '\n'
+
+    return msg
 
