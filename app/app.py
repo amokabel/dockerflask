@@ -1,7 +1,8 @@
-from flask import Flask
+from flask import (Flask, render_template)
 import mysql.connector
 import sys
 import logging
+from random_word import RandomWords
 
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
@@ -29,9 +30,9 @@ class Database:
     def fetchEntries(self):
         app.logger.info("Fetching entries")
         ret = []
-        self.cursor.execute("SELECT msg, ts FROM messages;")
+        self.cursor.execute("SELECT id, msg, ts FROM messages;")
         for c in self.cursor:
-            ret.append(c[0])
+            ret.append((c[0], c[1], c[2]))
 
         return ret
 
@@ -52,15 +53,10 @@ def index():
     conn = db_handle()
     entries = []
     if conn:
-        db_handle().addEntry("hello")
+        db_handle().addEntry(RandomWords().get_random_word())
         messages = db_handle().fetchEntries()
     else:
         app.logger.error("Could not add entry")
 
-    msg = "Disco\n"
-    for m in messages:
-        msg += m
-        msg += '\n'
-
-    return msg
+    return render_template('index.html', messages=messages)
 

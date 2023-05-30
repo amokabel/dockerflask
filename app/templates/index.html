@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>DockerFlask</title>
+<style>
+td {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+table tr:nth-child(odd) {
+    background-color: rgb(220, 220, 220);
+}
+</style>
+    </head>
+    <body>
+        <h2>Super test application</h2>
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Timestamp</th>
+                <th>Message</th>
+            </tr>
+            {% for r in messages %}
+            <tr>
+                <td>{{r[0]}}</td><td>{{r[1]}}</td><td>{{r[2]}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
