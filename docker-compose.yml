@@ -20,6 +20,8 @@ services:
     environment:
       - MYSQL_DATABASE=testdb
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
+    ports:
+      - 3306:3306
     expose:
       - 3306
       - 33060
